@@ -111,8 +111,8 @@ void TheSparseMatrixClass()
 
         // 维数可以使用下面的方法获得：
         // Standard    dimensions，标准的维度
-        // mat.rows()
-        // mat.cols()
+        auto rows = mat.rows();
+        auto cols = mat.cols();
         // vec.size()
 
         // Sizes along the  inner/outer dimensions，内部和外部维度的大小
