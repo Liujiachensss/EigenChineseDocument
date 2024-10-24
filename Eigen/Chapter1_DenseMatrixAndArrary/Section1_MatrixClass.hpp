@@ -72,12 +72,17 @@ void Resizing()
         // 否则具有破坏性：系数的值可能会更改。如果你想调整大小()，它不改变系数，使用conservativeResize()
 
         MatrixXd m(2, 5);
+        std::cout << "The matrix m position " << m.data() << "\n";
         m.resize(4, 3);
+        std::cout << "The matrix m position " << m.data() << "\n";
         std::cout << "The matrix m is of size "
                   << m.rows() << "x" << m.cols() << std::endl;
         std::cout << "It has " << m.size() << " coefficients" << std::endl;
         VectorXd v(2);
+        std::cout << "The vector v position " << v.data() << "\n";
         v.resize(5);
+        std::cout << "The vector v position " << v.data() << "\n";
+
         std::cout << "The vector v is of size " << v.size() << std::endl;
         std::cout << "As a matrix, v is of size "
                   << v.rows() << "x" << v.cols() << std::endl;
@@ -92,6 +97,7 @@ void Resizing()
                 //但是以下代码是合法的：
                 Matrix4d m;
                 m.resize(4, 4); // no operation
+                std::cout << "The matrix4d m position " << m.data() << "\n";
                 std::cout << "The matrix m is of size "
                           << m.rows() << "x" << m.cols() << std::endl;
         }
@@ -138,6 +144,21 @@ void AssignmentAndResizing()
         a = b;
         std::cout << "a is now of size " << a.rows() << "x" << a.cols() << std::endl;
         
+
+        // 
+        std::cout << "小的复制进大的呢\n";
+        MatrixXf c(2, 2);
+        c << 1, 2, 3, 4;
+        std::cout << "c.data()=" << c.data() << "\n"; // =0x603e294952f0
+        MatrixXf d(3, 3);
+        std::cout << "d.data()=" << d.data() << "\n"; // =0x603e29495340
+        std::cout << "after copy\n";
+
+        d << 5, 6, 7, 8, 9, 10, 11, 12, 13;
+        d = c;
+        std::cout << d << "\n";
+        std::cout << "c.data()=" << c.data() << "\n"; // =0x603e294952f0
+        std::cout << "d.data()=" << d.data() << "\n"; // =0x603e29495370
 }
 
 void FixedSizeAndDynamicSize()
