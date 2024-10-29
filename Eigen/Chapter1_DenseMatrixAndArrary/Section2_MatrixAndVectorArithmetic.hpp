@@ -53,6 +53,8 @@ void AdditionAndSubtraction()
         // -1
         // -4
         // -6
+        //! 以下这种a + 1或者a - 1的操作是错误的，因为Matrix不支持这种操作
+        // std::cout << "Doing a + 10 : " << a + 10 << std::endl;
 }
 
 void ScalarMultiplicationAndDivision()
@@ -92,26 +94,32 @@ void ScalarMultiplicationAndDivision()
 void ANoteAboutExpressionTemplates()
 {
         LOG();
-        // 在Eigen中，诸如算术运算符（例如）operator+自己并不执行任何计算,
-        // 它们仅返回描述要执行的计算的“表达式对象”。当计算整个表达式时，实际的计算将在稍后进行，
-        // 通常在中operator=。尽管这听起来很沉重，但是任何现代的优化编译器都可以优化该抽象，从而获得完美优化的代码。例如，当您这样做时：
+        // 在Eigen中，诸如算术运算符（例如）operator+自己并不执行任何计算，它们仅返回描述要执行的计算的“表达式对象”。
+        // 当计算整个表达式时，实际的计算将在稍后进行，typically，operator=。
+        // 尽管这听起来很沉重，但是任何现代的优化编译器都可以优化该抽象，从而获得完美优化的代码。
+        // 例如，当您这样做时：
 
-        // VectorXf a(50), b(50), c(50), d(50);
+        VectorXf a(50), b(50), c(50), d(50);
+        // a.Random();
+        // b.Random();
+        // c.Random();
+        // d.Random();
         // ...
         // a = 3*b + 4*c + 5*d;
         // Eigen将其编译为一个for循环，因此数组仅被遍历一次。简化（例如忽略SIMD优化），此循环如下所示：
 
-        // 对于（int i = 0; i <50; ++ i）
-        //   a [i] = 3 * b [i] + 4 * c [i] + 5 * d [i]；
-
-        // 因此，您不必担心Eigen使用相对较大的算术表达式：它只会为Eigen提供更多优化机会。
+        for(int i = 0; i <50; ++ i)
+          a[i] = 3 * b[i] + 4 * c[i] + 5 * d[i];
+        std::cout << a << "\n";
+        // 因此，您不必担心Eigen处理相对较大的算术表达式：它只会为Eigen提供更多优化机会。
 }
 
 void TranspositionAndConjugation()
 {
 
         LOG();
-        //矩阵或向量的转置$ a ^ T $，共轭$ \ bar {a} $和伴随（即共轭转置）分别通过成员函数transpose（），conjugate（）和adjoint（）获得
+        //矩阵或向量的转置$ a ^ T $，共轭$ \ bar {a} $和伴随（即共轭转置）
+        //分别通过成员函数transpose()，conjugate()和adjoint()获得
         {
                 MatrixXcf a = MatrixXcf::Random(2, 2); //MatrixXcf 为复数矩阵
                 cout << "Here is the matrix a\n"
@@ -148,7 +156,10 @@ void TranspositionAndConjugation()
                 // a = a.transpose(); // !!! do NOT do this !!!
                 // cout << "and the result of the aliasing effect:\n"
                 //      << a << endl;
-
+// If you do a = a.transpose(), 
+// then Eigen starts writing the result into a, before the evaluation of the transpose is finished." 
+// Therefore, the instruction a = a.transpose() does not replace a with its transpose, as one would expect:"
+// 因为这样可能会使用a作为转置的临时存储，导致a在转置完成之前被覆盖
                 // 应该这样～～～～
                 a.transposeInPlace();
                 cout << "and after being transposed:\n"
@@ -161,6 +172,9 @@ void TranspositionAndConjugation()
                 // 1 4
                 // 2 5
                 // 3 6
+                //! 注意不存在 就地共轭的 a.conjugateInPlace();
+                
+                a.adjointInPlace();
         }
 }
 
@@ -210,7 +224,7 @@ void DotProductAndCrossProduct()
 {
         LOG();
         //  cross product is only for vectors of size 3. Dot product is for vectors of any sizes
-        // 叉积只适用于大小为3的向量，点积适用于任意向量
+        // 叉积只适用于维度为3的向量，点积适用于任意向量
         Vector3d v(1, 2, 3);
         Vector3d w(0, 1, 2);
         cout << "Dot product: " << v.dot(w) << endl;
@@ -235,7 +249,7 @@ void BasicArithmeticReductionOperations()
         Eigen::Matrix2d mat;
         mat << 1, 2,
             3, 4;
-        //元素和，元素乘积，元素均值，最小系数，最大系数，踪
+        //元素和，元素累乘，元素均值，最小系数，最大系数，矩阵的迹（对角线元素之和）
         cout << "Here is mat.sum():       " << mat.sum() << endl;
         cout << "Here is mat.prod():      " << mat.prod() << endl;
         cout << "Here is mat.mean():      " << mat.mean() << endl;

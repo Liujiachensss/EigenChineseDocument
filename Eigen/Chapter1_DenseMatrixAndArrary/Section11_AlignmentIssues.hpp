@@ -10,25 +10,44 @@ namespace Section11_AlignmentIssues
 // 这节比较抽象，知道咋用就好！
 // TODO 继续翻译！
 
-// 对齐错误
-//Eigen::internal::matrix_array<T, Size, MatrixOptions, Align>::internal::matrix_array()
-// [with T = double, int Size = 2, int MatrixOptions = 2, bool Align = true]:
-// Assertion `(reinterpret_cast<size_t>(array) & (sizemask)) == 0 && "this assertion
-// is explained here: http://eigen.tuxfamily.org/dox-devel/group__TopicUnalignedArrayAssert.html
-//      READ THIS WEB PAGE !!! ****"' failed.
+//+ Explanation of the assertion on unaligned arrays
+/* 
+! my_program: path/to/eigen/Eigen/src/Core/DenseStorage.h:44:
+! Eigen::internal::matrix_array<T, Size, MatrixOptions, Align>::internal::matrix_array()
+! [with T = double, int Size = 2, int MatrixOptions = 2, bool Align = true]:
+! Assertion `(reinterpret_cast<size_t>(array) & (sizemask)) == 0 && "this assertion
+! is explained here: http://eigen.tuxfamily.org/dox-devel/group__TopicUnalignedArrayAssert.html
+!      READ THIS WEB PAGE !!! ****"' failed.
 
-// 首先找到程序触发位置，
-// 例如，
-//$gdb ./my_program
-//>run
-//...
-//>bt
+这一问题的已知原因有4个。如果您只使用较新的编译器（例如，GCC>=7、clang>=5、MSVC>=19.12）来针对[c++17]，那么您很幸运：
+启用c++17应该就足够了（如果不行，请向我们报告）。否则，请继续阅读以了解这些问题并学习如何解决它们。
+
+首先，你需要找出这个断言是在自己的代码的哪个部分触发的。乍一看，这个错误消息似乎没有帮助，因为它指向了Eigen库中的一个文件！
+然而，由于你的程序崩溃了，如果你可以重现崩溃，你可以使用任何调试器获取一个堆栈跟踪。例如，如果你使用GCC，你可以按照以下方式使用GDB调试器：
+
+$ gdb ./my_program          # Start GDB on your program
+> run                       # Start running your program
+...                         # Now reproduce the crash!
+> bt                        # Obtain the backtrace
+*/
+
 //然后与下面的4种原因对号入座，修改代码
+//+ case1: 结构体中具有Eigen对象成员
+class Foo
+{
+  //...
+  Eigen::Vector4d v;
+  //...
+};
+//...
+Foo *foo = new Foo;
 
-// 二 四种原因
+// then you need to read this separate page: "Structures Having Eigen Members".
 
-// 原因1:结构体中具有Eigen对象成员
-//请注意，此处Eigen :: Vector2d仅用作示例，
+// Note that here, Eigen::Vector4d is only used as an example, more generally the issue arises for all "fixed-size vectorizable Eigen types".
+
+//+ "Structures Having Eigen Members"
+
 //更一般而言，所有固定大小的可矢量化Eigen类型都会出现此问题
 //固定大小的可矢量化Eigen类型是如果它具有固定的大小并且大小是16字节的倍数
 // Eigen::Vector2d
@@ -87,7 +106,7 @@ namespace Section11_AlignmentIssues
 // 出于这个原因，Eigen自己通过执行以下两项工作自行要求对Eigen :: Vector2d进行128位对齐：
 
 
-//原因2：STL容器或手动内存分配
+//+ case2：STL容器或手动内存分配
 ///如果您将Stl容器（例如std :: vector，std :: map等）
 //与Eigen对象或包含Eigen对象的类一起使用，
 // std::vector<Eigen::Matrix2f> my_vector;

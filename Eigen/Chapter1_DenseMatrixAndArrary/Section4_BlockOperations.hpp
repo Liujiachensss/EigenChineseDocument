@@ -130,14 +130,14 @@ void CornerRelatedOperations()
         LOG();
         //一系列矩阵的边角块操作
         // Block operation	Version constructing a dynamic-size block expression	Version constructing a fixed-size block expression
-        // Top-left p by q block *	                                      matrix.topLeftCorner(p,q);                            matrix.topLeftCorner<p,q>();
-        // Bottom-left p by q block *	                                 matrix.bottomLeftCorner(p,q);                    matrix.bottomLeftCorner<p,q>();
-        // Top-right p by q block *	                                    matrix.topRightCorner(p,q);                         matrix.topRightCorner<p,q>();
-        // Bottom-right p by q block *	                               matrix.bottomRightCorner(p,q);                 matrix.bottomRightCorner<p,q>();
-        // Block containing the first q rows *	                  matrix.topRows(q);                                           matrix.topRows<q>();
-        // Block containing the last q rows *	                  matrix.bottomRows(q);                                  matrix.bottomRows<q>();
-        // Block containing the first p columns *	     matrix.leftCols(p);                                              matrix.leftCols<p>();
-        // Block containing the last q columns *	     matrix.rightCols(q);                                           matrix.rightCols<q>();
+        // Top-left p by q block *	                    matrix.topLeftCorner(p,q);          matrix.topLeftCorner<p,q>();
+        // Bottom-left p by q block *	               matrix.bottomLeftCorner(p,q);       matrix.bottomLeftCorner<p,q>();
+        // Top-right p by q block *	               matrix.topRightCorner(p,q);         matrix.topRightCorner<p,q>();
+        // Bottom-right p by q block *	               matrix.bottomRightCorner(p,q);      matrix.bottomRightCorner<p,q>();
+        // Block containing the first q rows *	     matrix.topRows(q);                  matrix.topRows<q>();
+        // Block containing the last q rows *	     matrix.bottomRows(q);               matrix.bottomRows<q>();
+        // Block containing the first p columns *	     matrix.leftCols(p);                 matrix.leftCols<p>();
+        // Block containing the last q columns *	     matrix.rightCols(q);                matrix.rightCols<q>();
         Eigen::Matrix4f m;
         m << 1, 2, 3, 4,
             5, 6, 7, 8,
@@ -174,10 +174,10 @@ void BlockOperationsForVectors()
 {
         LOG();
         //同样，向量也有一系列类似于矩阵的边角块操作
-        // Block operation	Version                                                       constructing adynamic-size block expression	                        Version constructing afixed-size block expression
-        // Block containing the first n elements *	                                                    vector.head(n);                                                                   vector.head<n>();
-        // Block containing the last n elements *	                                                    vector.tail(n);                                                                       vector.tail<n>();
-        // Block containing n elements, starting at position i *                           vector.segment(i,n);                                                         vector.segment<n>(i);
+        // Block operation	Version                               constructing adynamic-size block expression	                        Version constructing afixed-size block expression
+        // Block containing the first n elements *	               vector.head(n);                                                                   vector.head<n>();
+        // Block containing the last n elements *	                    vector.tail(n);                                                                       vector.tail<n>();
+        // Block containing n elements, starting at position i *      vector.segment(i,n);                                                         vector.segment<n>(i);
         Eigen::ArrayXf v(6);
         v << 1, 2, 3, 4, 5, 6;
         cout << "v.head(3) =" << endl

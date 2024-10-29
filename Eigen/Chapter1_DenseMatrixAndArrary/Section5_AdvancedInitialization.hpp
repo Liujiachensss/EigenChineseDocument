@@ -139,7 +139,7 @@ void UsageAsTemporaryObjects()
              << m * v << endl;
 
         // The comma-initializer, too, can also be used to construct temporary objects.
-        //The following example constructs a random matrix of size 2-by-3,
+        // The following example constructs a random matrix of size 2-by-3,
         // and then multiplies this matrix on the left with [0 1; 1 0]
         MatrixXf mat = MatrixXf::Random(2, 3);
         std::cout << mat << std::endl

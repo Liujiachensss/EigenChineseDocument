@@ -9,18 +9,19 @@ namespace Chapter1_DenseMatrixAndArrary
 
 namespace Section8_ReshapeSlicing
 {
+     //! 这个是3.4之前的用法，3.4之后提供芯的API reshaped(nrows, ncols)
 void Reshape()
 {
          LOG();
         // 重塑
-        //整形操作在于修改矩阵的大小，同时保持相同的系数。
+        //变形操作修改矩阵各个维度的大小，同时保持相同的系数及总数。
         //除了修改输入矩阵本身（这对于编译时大小而言是不可能的）之外，
         //该方法还包括使用Map类在存储上创建不同的视图。这是创建矩阵的一维线性视图的典型示例：
         MatrixXf M1(3, 3); // Column-major storage
         // 注意：逗号初始化是为了方便我们输入矩阵，但是底层存储是按照列主的顺序存储的
         M1 << 1, 2, 3,
-            4, 5, 6,
-            7, 8, 9;
+              4, 5, 6,
+              7, 8, 9;
         Map<RowVectorXf> v1(M1.data(), M1.size());
         cout << "v1:" << endl
              << v1 << endl;
