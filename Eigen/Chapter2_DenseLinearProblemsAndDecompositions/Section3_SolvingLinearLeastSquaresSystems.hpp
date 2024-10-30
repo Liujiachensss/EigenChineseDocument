@@ -6,6 +6,7 @@ namespace Chapter2_DenseLinearProblemsAndDecompositions
 
 namespace Section3_SolvingLinearLeastSquaresSystems
 {
+//+ 最小二乘求解
 // 本页介绍如何使用本征求解线性最小二乘系统。一个超定方程组，例如Ax = b，没有解。
 //在这种情况下，在差异Ax - b尽可能小的意义上，搜索最接近解的向量x是有意义的。
 //该x称为最小二乘解（如果使用欧几里得范数）。
@@ -57,8 +58,9 @@ void UsingNormalEquations()
 {
         LOG();
         //找到Ax = b的最小二乘解等效于求解法线方程A T Ax = A T b。
-        //如果矩阵A是病态的，那么这不是一个好方法，因为A T A的条件数是A的条件数的平方。
-        //这意味着与使用其他方法相比，使用正则方程式丢失的数字要多两倍。
+        // 这种方法通常是最快的，尤其是当A是一个“高而瘦”的矩阵时。
+        // 然而，如果矩阵A甚至稍有病态（even mildly ill-conditioned），这不是一个好的方法，因为(A^T)(A)的条件数是A的条件数的平方。
+        // 这意味着与上面提到的更稳定的方法相比，使用常规方程大约会损失两倍的精度。
         MatrixXf A = MatrixXf::Random(3, 2);
         VectorXf b = VectorXf::Random(3);
         cout << "The solution using normal equations is:\n"
