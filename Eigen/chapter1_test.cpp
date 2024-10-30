@@ -8,7 +8,7 @@
 #include "Chapter1_DenseMatrixAndArrary/Section8_ReshapeAndSlicing.hpp"
 #include "Chapter1_DenseMatrixAndArrary/Section9_Aliasing.hpp"
 #include "Chapter1_DenseMatrixAndArrary/Section10_StorageOrders.hpp"
-#include "Chapter1_DenseMatrixAndArrary/Section11_AlignmentIssues.hpp"
+// #include "Chapter1_DenseMatrixAndArrary/Section11_AlignmentIssues.hpp"
 
 void PrintMsg(int i)
 {
